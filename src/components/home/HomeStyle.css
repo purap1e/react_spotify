@@ -1,0 +1,13 @@
+.main {
+    overflow-y: auto;
+    min-height: 330px;
+    max-height: calc(100vh - 100px);
+
+    background: hsla(0, 9%, 9%, 1);
+    background: linear-gradient(90deg, hsla(0, 9%, 9%, 1) 63%, hsla(267, 99%, 27%, 1) 100%);
+    background: -moz-linear-gradient(90deg, hsla(0, 9%, 9%, 1) 63%, hsla(267, 99%, 27%, 1) 100%);
+    background: -webkit-linear-gradient(90deg, hsla(0, 9%, 9%, 1) 63%, hsla(267, 99%, 27%, 1) 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#181414", endColorstr="#3E0189", GradientType=1);
+    margin: 5px;
+    border-radius: 10px;
+}
