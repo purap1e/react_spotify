@@ -11,3 +11,9 @@
     margin: 5px;
     border-radius: 10px;
 }
+
+.title {
+    color: var(--white);
+    font-weight: 700;
+    font-size: 32px;
+}

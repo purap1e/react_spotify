@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import '../home/HomeStyle.css'
 import '../common/CommonStyle.css'
+import Header from "../header/Header";
+
 
 const Home = () => {
     const [time, setTime] = useState("Добрый вечер");
@@ -23,9 +25,7 @@ const Home = () => {
     return (
         <div className="main">
             <div className="container">
-                <header className="header">
-                    <img src="/svgs/arrow-right.svg"/>
-                </header>
+                <Header/>
                 <div className="first-section">
                     <p className="title">{time}</p>
                 </div>
