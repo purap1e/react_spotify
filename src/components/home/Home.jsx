@@ -2,10 +2,11 @@ import React, {useEffect, useState} from 'react'
 import '../home/HomeStyle.css'
 import '../common/CommonStyle.css'
 import Header from "../header/Header";
+import Content from "../main-content/Content";
 
 
 const Home = () => {
-    const [time, setTime] = useState("Добрый вечер");
+    const [title, setTitle] = useState("Добрый вечер");
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -13,9 +14,9 @@ const Home = () => {
             const hour = now.getHours();
 
             if (hour < 18) {
-                setTime("Добрый день")
+                setTitle("Добрый день")
             } else {
-                setTime("Добрый вечер")
+                setTitle("Добрый вечер")
             }
         }, 1000);
 
@@ -27,7 +28,8 @@ const Home = () => {
             <div className="container">
                 <Header/>
                 <div className="first-section">
-                    <p className="title">{time}</p>
+                    <p className="title">{title}</p>
+                    <Content/>
                 </div>
             </div>
         </div>

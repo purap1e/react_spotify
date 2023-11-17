@@ -38,7 +38,7 @@ const SideBar = () => {
                 <div className="media-library-icons">
                     <i className="material-icons">library_music</i>
                 </div>
-                <div className="list-of-playlist">
+                <div className="list-of-playlists">
                     {imageSrcArray.map((src, index) => (
                         <div className="item-list" key={index}>
                             <img src={src} alt="" />
