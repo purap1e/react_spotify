@@ -164,3 +164,8 @@
 #showAllButton:hover::before {
     width: 100%;
 }
+
+.link {
+    text-decoration: none;
+    color: inherit;
+}

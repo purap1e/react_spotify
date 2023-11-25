@@ -195,7 +195,7 @@ const Content = () => {
        <div>
            <div className="user-playlists">
                {playlists.map((playlist) => (
-                   <Link to={`/playlist/${playlist.id}`}>
+                   <Link to={`/playlist/${playlist.id}`} className="link">
                    <div className="playlist" key={playlist.id}>
                        <img src={playlist.imgSrc} alt={playlist.name} />
                        <div className="text-area">

@@ -10,7 +10,7 @@ const Details = ({ playlistId }) => {
         const filteredSongs = playlistSongsData.filter(song => song.playlistId === playlistId);
         setThisPlaylistSongs(filteredSongs);
     }, [playlistId]);
-    
+
     return (
         <div>
             <Header/>
