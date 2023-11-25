@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import '../common/CommonStyle.css'
 import '../main-content/ContentStyle.css'
+import {Link} from "react-router-dom";
+
 const Content = () => {
 
     const [playlists, setPlaylists] = useState([
@@ -193,6 +195,7 @@ const Content = () => {
        <div>
            <div className="user-playlists">
                {playlists.map((playlist) => (
+                   <Link to={`/playlist/${playlist.id}`}>
                    <div className="playlist" key={playlist.id}>
                        <img src={playlist.imgSrc} alt={playlist.name} />
                        <div className="text-area">
@@ -202,6 +205,7 @@ const Content = () => {
                            </div>
                        </div>
                    </div>
+                   </Link>
                ))}
            </div>
            <div className="recommendations">

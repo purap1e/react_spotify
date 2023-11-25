@@ -3,8 +3,6 @@ import '../home/HomeStyle.css'
 import '../common/CommonStyle.css'
 import Header from "../header/Header";
 import Content from "../main-content/Content";
-import Footer from "../footer/Footer";
-
 
 const Home = () => {
     const [title, setTitle] = useState("Добрый вечер");
@@ -32,7 +30,6 @@ const Home = () => {
                     <p className="title">{title}</p>
                     <Content/>
                 </div>
-                <Footer/>
             </div>
         </div>
     );
