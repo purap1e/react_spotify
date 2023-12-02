@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react'
 import '../common/CommonStyle.css'
 import '../footer/FooterStyle.css'
 
-const Footer = () => {
+const Footer = ({ currentTrack, playlist, updateCurrentTrack }) => {
 
     const audioRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);

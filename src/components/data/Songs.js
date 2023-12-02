@@ -6,6 +6,7 @@ export default [
         artist: 'Gesaffelstein, The Weeknd',
         imgSrc: '/images/lost_in_the_fire.jpg',
         audioSrc: '/musics/lost_in_the_fire.mp3',
+        updatedTime: '21 нояб. 2021 г.',
         album: 'Hyperion'
     },
     {
@@ -15,6 +16,7 @@ export default [
         artist: 'Daft Punk',
         imgSrc: '/images/get_lucky.jpg',
         audioSrc: '/musics/get_lucky.mp3',
+        updatedTime: '21 нояб. 2021 г.',
         album: 'Get Lucky(Radio Edit) [feat. Pharrell Williams and Nile Rodgers]'
     }
 ];
