@@ -1,8 +1,14 @@
 .header {
+    position: fixed;
+    top: 0;
+    left: 100px;
+    width: calc(100% - 150px);
     height: 70px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    z-index: 1000;
+    margin: 0 15px;
 }
 
 .container {
@@ -17,10 +23,16 @@
 }
 
 .arrow-btn {
+    display: flex;
     color: var(--white);
     opacity: 0.6;
     border-radius: 50%;
     background-color: var(--black);
+    transition: opacity .1s ease;
+}
+
+.arrow-btn:hover {
+    opacity: 1;
 }
 
 .user-info {
