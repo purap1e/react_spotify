@@ -4,18 +4,19 @@ import React from "react";
 import MainPage from "./components/pages/MainPage";
 import Footer from "./components/footer/Footer";
 import PlaylistPage from "./components/pages/PlaylistPage";
+import { TrackProvider } from './components/TrackContext';
 
 function App() {
   return (
-      <BrowserRouter>
-
-          <Routes>
-              <Route path="/" element={<MainPage/>}></Route>
-              <Route path="/playlist/:playlistId" element={<PlaylistPage/>}></Route>
-          </Routes>
-
-          <Footer/>
-      </BrowserRouter>
+      <TrackProvider>
+          <BrowserRouter>
+              <Routes>
+                  <Route path="/" element={<MainPage />} />
+                  <Route path="/playlist/:playlistId" element={<PlaylistPage/>} />
+              </Routes>
+              <Footer />
+          </BrowserRouter>
+      </TrackProvider>
   );
 }
 

@@ -3,6 +3,7 @@ import Header from "../header/Header";
 import React, {useEffect, useState} from "react";
 import playlists from "../data/Playlists";
 import './DetailsStyle.css'
+import { useTrackContext } from '../TrackContext';
 
 import {MdOutlinePlayCircleFilled} from "react-icons/md";
 import {BiDotsHorizontalRounded} from "react-icons/bi";
@@ -15,6 +16,7 @@ const Details = ({ playlistId }) => {
     const [thisPlaylistSongs, setThisPlaylistSongs] = useState([]);
     const [thisPlaylist, setThisPlaylist] = useState({});
     const [tableRows, setTableRows] = useState([]);
+    const { setTrack } = useTrackContext();
 
     useEffect(() => {
         const filteredSongs = playlistSongsData.filter(song => song.playlistId === playlistId);
@@ -38,24 +40,26 @@ const Details = ({ playlistId }) => {
                 audio.load();
             });
         };
-
         const updateTableRows = async () => {
             const rows = await Promise.all(
                 thisPlaylistSongs.map(async (song, index) => {
                     try {
                         const duration = await loadAudioDuration(song.audioSrc);
                         return (
-                            <tr key={index}>
-                                <td>{song.id}</td>
+                            <tr key={index} onClick={() => setTrack(song)}>
+                                <td className="song-text">{song.id}</td>
                                 <td>
                                     <div className="img-name">
                                         <img src={song.imgSrc} alt={''} />
-                                        <p>{song.name}</p>
+                                        <div>
+                                            <p>{song.name}</p>
+                                            <p className="song-text">{song.artist}</p>
+                                        </div>
                                     </div>
                                 </td>
-                                <td>{song.album}</td>
-                                <td>{song.updatedTime}</td>
-                                <td>{formatDuration(duration)}</td>
+                                <td className="song-text">{song.album}</td>
+                                <td className="song-text">{song.updatedTime}</td>
+                                <td className="song-text">{formatDuration(duration)}</td>
                             </tr>
                         );
                     } catch (error) {
@@ -64,7 +68,6 @@ const Details = ({ playlistId }) => {
                     }
                 })
             );
-
             setTableRows(rows.filter(row => row !== null));
         };
         updateTableRows();
@@ -75,6 +78,8 @@ const Details = ({ playlistId }) => {
         const seconds = Math.floor(duration % 60);
         return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     };
+
+
 
     return (
         <div className="main-details">

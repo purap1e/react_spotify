@@ -145,7 +145,7 @@
     width: 100%;
     margin-top: 30px;
     color: var(--white);
-    opacity: .7;
+    opacity: 1;
     font-size: 12px;
 }
 
@@ -185,6 +185,10 @@ table {
     display: flex;
     column-gap: 10px;
     align-items: center;
+}
+
+.song-text {
+    opacity: .7;
 }
 
 .img-name img {

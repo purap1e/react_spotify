@@ -1,14 +1,27 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import '../common/CommonStyle.css'
 import '../footer/FooterStyle.css'
+import {useTrackContext} from "../TrackContext";
 
-const Footer = ({ currentTrack, playlist, updateCurrentTrack }) => {
+const Footer = () => {
+
+    const { currentTrack } = useTrackContext();
 
     const audioRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [volume, setVolume] = useState(1);
+
+
+    const defaultTrack = {
+        imgSrc: "/images/die_for_you.jpg",
+        name: "Die For You",
+        artist: "The Weeknd",
+        audioSrc: "/musics/dieforyou.mp3"
+    };
+
+    const trackToDisplay = currentTrack || defaultTrack;
 
     const togglePlayPause = () => {
         if (audioRef.current.paused) {
@@ -30,6 +43,7 @@ const Footer = ({ currentTrack, playlist, updateCurrentTrack }) => {
         document.querySelector('.progress-bar').style.width = `${progress}%`;
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const updateTime = () => {
         setCurrentTime(audioRef.current.currentTime);
         setDuration(audioRef.current.duration);
@@ -65,15 +79,42 @@ const Footer = ({ currentTrack, playlist, updateCurrentTrack }) => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
             audioRef.current.removeEventListener('timeupdate', updateTime);
         };
-    }, []);
+    }, [updateTime, trackToDisplay]);
+
+    useEffect(() => {
+        const loadNewTrack = () => {
+            setIsPlaying(false);
+            setCurrentTime(0);
+            setDuration(0);
+            document.querySelector('.progress-bar').style.width = '0%';
+
+            // Load the new audio track
+            audioRef.current.src = trackToDisplay.audioSrc;
+
+            // // Wait for the audio track to load before playing it
+            audioRef.current.addEventListener('canplaythrough', () => {
+                audioRef.current.play();
+                setIsPlaying(true);
+            });
+        };
+
+        loadNewTrack();
+
+        // Clean up event listener to avoid memory leaks
+        return () => {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            audioRef.current.removeEventListener('canplaythrough', () => {});
+        };
+    }, [trackToDisplay]);
+
 
     return (
         <footer className="footer">
             <div className="img-area">
-                <img src="/images/die_for_you.jpg" alt=""/>
+                <img src={trackToDisplay.imgSrc} alt=""/>
                 <div className="song-details">
-                    <p className="name">Die For You</p>
-                    <p className="artist">The Weeknd</p>
+                    <p className="name">{trackToDisplay.name}</p>
+                    <p className="artist">{trackToDisplay.artist}</p>
                 </div>
             </div>
             <div className="music-area">
@@ -90,7 +131,7 @@ const Footer = ({ currentTrack, playlist, updateCurrentTrack }) => {
                 </div>
                 <div className="progress-area" onClick={handleProgressBarClick}>
                     <div className="progress-bar">
-                        <audio ref={audioRef} id="main-audio" src="/musics/dieforyou.mp3"></audio>
+                        <audio ref={audioRef} id="main-audio" src={trackToDisplay.audioSrc}></audio>
                     </div>
                     <div className="song-timer">
                         <div className="current-time">{formatTime(currentTime)}</div>
