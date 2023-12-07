@@ -1,0 +1,99 @@
+.signup-page {
+    width: 100%;
+    color: var(--white);
+    display: flex;
+    justify-content: center;
+}
+
+form {
+    margin-top: 100px;
+    width: 308px;
+    height: 700px;
+    display: flex;
+    flex-direction: column;
+}
+
+form p {
+    word-wrap: break-word;
+    font-size: 42px;
+    font-weight: 700;
+}
+
+form label {
+    margin-top: 30px;
+    margin-bottom: 5px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+form input {
+    display: block;
+    height: 70px;
+    width: 100%;
+    background-color: var(--black);
+    border: 1px grey solid;
+    border-radius: 3px;
+    padding: 0 10px;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--white);
+}
+
+.button-signup {
+    margin-top: 20px;
+    background-color: var(--limegreen);
+    border: none;
+    height: 80px;
+    border-radius: 40px;
+    color: var(--black);
+    font-weight: 800;
+}
+
+.line-container {
+    display: flex;
+    align-items: center;
+    margin: 30px 0;
+    font-size: 12px;
+}
+
+.line {
+    flex: 1;
+    height: 1px;
+    opacity: .7;
+    background-color: #fff;
+    margin: 0 5px; /* Расстояние между линией и текстом */
+}
+
+.btn-link {
+    display: flex;
+    align-items: center;
+    margin: 2px 0;
+    padding: 2px;
+    border: 1px solid gray;
+    width: 100%;
+    font-weight: bold;
+    transition: background-color .2s linear;
+    cursor: pointer;
+    border-radius: 40px;
+}
+.btn-link:hover {
+    background-color: #bdd3cc;
+}
+
+.icon {
+    object-fit: cover;
+    width: 24px;
+    height: 24px;
+    margin-left: 15px;
+}
+.text--block {
+    width: 100%;
+    text-align: center;
+}
+
+.logo {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+}

@@ -3,11 +3,13 @@ import './HeaderStyle.css'
 import {RxCaretLeft, RxCaretRight} from "react-icons/rx";
 import {PiArrowCircleDownDuotone} from "react-icons/pi";
 import {LuBell} from "react-icons/lu";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import {useAuth} from "../js/AuthContext";
 
 const Header = () => {
 
     const navigate  = useNavigate();
+    const {isAuthenticated, logout} = useAuth();
 
     const goBack = () => {
         navigate(-1);
@@ -28,12 +30,21 @@ const Header = () => {
                 </div>
             </div>
             <div className="user-info">
-                <div className="download-block">
-                    <PiArrowCircleDownDuotone className="download-btn-down" size={24}/>
-                    <div className="download-text">Установить приложение</div>
-                </div>
-                <LuBell className="bell-btn"/>
-                <img className="avatar" src="/images/kitten.png" alt="kitten"/>
+                {isAuthenticated ? (
+                    <>
+                        <div className="download-block">
+                            <PiArrowCircleDownDuotone className="download-btn-down" size={24}/>
+                            <div className="download-text">Установить приложение</div>
+                        </div>
+                        <LuBell className="bell-btn"/>
+                        <img className="avatar" src="/images/kitten.png" alt="kitten"/>
+                    </>
+                ) : (
+                    <>
+                        <Link to="/signup" className="sign-up-btn">Зарегестрироваться</Link>
+                        <Link to="/login" className="login-btn">Войти</Link>
+                    </>
+                )}
             </div>
         </header>
     );

@@ -79,3 +79,36 @@
     background-color: var(--black);
     object-fit: cover;
 }
+
+.sign-up-btn {
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--white);
+    opacity: .5;
+    transition: .1s;
+}
+
+.sign-up-btn:hover {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+.login-btn {
+    width: 100px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--black);
+    background-color: var(--white);
+    border-radius: 30px;
+    transition: .1s;
+}
+
+.login-btn:hover {
+    background-color: #dddddd;
+}

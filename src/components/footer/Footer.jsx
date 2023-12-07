@@ -2,17 +2,19 @@ import React, {useCallback, useEffect, useRef, useState} from 'react'
 import '../common/CommonStyle.css'
 import '../footer/FooterStyle.css'
 import {useTrackContext} from "../TrackContext";
+import {useAuth} from "../js/AuthContext";
+import {Link} from "react-router-dom";
 
 const Footer = () => {
 
     const { currentTrack } = useTrackContext();
+    const {isAuthenticated, logout} = useAuth();
 
     const audioRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [volume, setVolume] = useState(1);
-
 
     const defaultTrack = {
         imgSrc: "/images/die_for_you.jpg",
@@ -74,28 +76,55 @@ const Footer = () => {
     };
 
     useEffect(() => {
-        audioRef.current.addEventListener('timeupdate', updateTime);
-        return () => {
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            audioRef.current.removeEventListener('timeupdate', updateTime);
-        };
+        if (audioRef.current) {
+            audioRef.current.addEventListener('timeupdate', updateTime);
+            return () => {
+                // eslint-disable-next-line react-hooks/exhaustive-deps
+                audioRef.current.removeEventListener('timeupdate', updateTime);
+            };
+        }
     }, [updateTime, trackToDisplay]);
 
     useEffect(() => {
+        // const loadNewTrack = () => {
+        //     setIsPlaying(false);
+        //     setCurrentTime(0);
+        //     setDuration(0);
+        //     document.querySelector('.progress-bar').style.width = '0%';
+        //
+        //     // Load the new audio track
+        //     audioRef.current.src = trackToDisplay.audioSrc;
+        //
+        //     // // Wait for the audio track to load before playing it
+        //     audioRef.current.addEventListener('canplaythrough', () => {
+        //         audioRef.current.play();
+        //         setIsPlaying(true);
+        //     });
+        // };
+
         const loadNewTrack = () => {
             setIsPlaying(false);
             setCurrentTime(0);
             setDuration(0);
-            document.querySelector('.progress-bar').style.width = '0%';
+            const progressBar = document.querySelector('.progress-bar');
+            if (progressBar) {
+                progressBar.style.width = '0%';
+            }
 
             // Load the new audio track
-            audioRef.current.src = trackToDisplay.audioSrc;
+            if (audioRef.current) {
+                // Load the new audio track
+                audioRef.current.src = trackToDisplay.audioSrc;
 
-            // // Wait for the audio track to load before playing it
-            audioRef.current.addEventListener('canplaythrough', () => {
-                audioRef.current.play();
-                setIsPlaying(true);
-            });
+                // Wait for the audio track to load before playing it
+                audioRef.current.addEventListener('canplaythrough', () => {
+                    // Проверка, что компонент не размонтирован перед выполнением действия
+                    if (!audioRef.current) return;
+
+                    audioRef.current.play();
+                    setIsPlaying(true);
+                });
+            }
         };
 
         loadNewTrack();
@@ -103,62 +132,98 @@ const Footer = () => {
         // Clean up event listener to avoid memory leaks
         return () => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
-            audioRef.current.removeEventListener('canplaythrough', () => {});
+            if (audioRef.current) {
+                audioRef.current.removeEventListener('canplaythrough', () => {});
+            }
         };
     }, [trackToDisplay]);
 
+    const footerStyles = {
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        color: 'var(--white)',
+        width: '100%',
+        height: '100px',
+        display: 'grid',
+        gridTemplateColumns: isAuthenticated
+            ? 'repeat(3, 1fr)'
+            : '1fr',
+        background: isAuthenticated
+            ? '#000'
+            : 'linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(198,40,205,1) 0%, rgba(0,212,255,1) 100%)'
+    };
+
 
     return (
-        <footer className="footer">
-            <div className="img-area">
-                <img src={trackToDisplay.imgSrc} alt=""/>
-                <div className="song-details">
-                    <p className="name">{trackToDisplay.name}</p>
-                    <p className="artist">{trackToDisplay.artist}</p>
-                </div>
-            </div>
-            <div className="music-area">
-                <div className="controls">
-                    <i id="repeat-plist" className="material-icons" title="Playlist looped">repeat</i>
-                    <i id="prev" className="material-icons">skip_previous</i>
-                    <div className="play-pause" onClick={togglePlayPause}>
-                        <i className={`material-icons ${isPlaying ? 'pause' : 'play'}`}>
-                            {isPlaying ? 'pause' : 'play_arrow'}
-                        </i>
-                    </div>
-                    <i id="skip-next" className="material-icons">skip_next</i>
-                    <i id="more-music" className="material-icons">queue_music</i>
-                </div>
-                <div className="progress-area" onClick={handleProgressBarClick}>
-                    <div className="progress-bar">
-                        <audio ref={audioRef} id="main-audio" src={trackToDisplay.audioSrc}></audio>
-                    </div>
-                    <div className="song-timer">
-                        <div className="current-time">{formatTime(currentTime)}</div>
-                        <div className="max-duration">{formatTime(duration)}</div>
-                    </div>
-                </div>
-            </div>
-            <div className="extra-options">
-                <i id="slideshow" className="material-icons" title="Now Playing">slideshow</i>
-                <i id="lyrics" className="material-icons" title="Lyrics">lyrics</i>
-                <i id="queue" className="material-icons" title="Queue">queue_music</i>
-                <i id="devices" className="material-icons" title="Connect devices">devices</i>
-                <i id="volume" className="material-icons" title="Turn off">volume_up</i>
-                <div className="volume-control">
-                    <input
-                        type="range"
-                        id="volumeSlider"
-                        min="0"
-                        max="1"
-                        step="0.01"
-                        value={volume}
-                        onChange={handleVolumeChange}
-                    />
-                </div>
-                <i id="zoom" className="material-icons" title="To full screen">open_in_full</i>
-            </div>
-        </footer>
+        <div>
+            {isAuthenticated ? (
+                <>
+                    <footer className="footer" style={footerStyles}>
+                        <div className="img-area">
+                            <img src={trackToDisplay.imgSrc} alt=""/>
+                            <div className="song-details">
+                                <p className="name">{trackToDisplay.name}</p>
+                                <p className="artist">{trackToDisplay.artist}</p>
+                            </div>
+                        </div>
+                        <div className="music-area">
+                            <div className="controls">
+                                <i id="repeat-plist" className="material-icons" title="Playlist looped">repeat</i>
+                                <i id="prev" className="material-icons">skip_previous</i>
+                                <div className="play-pause" onClick={togglePlayPause}>
+                                    <i className={`material-icons ${isPlaying ? 'pause' : 'play'}`}>
+                                        {isPlaying ? 'pause' : 'play_arrow'}
+                                    </i>
+                                </div>
+                                <i id="skip-next" className="material-icons">skip_next</i>
+                                <i id="more-music" className="material-icons">queue_music</i>
+                            </div>
+                            <div className="progress-area" onClick={handleProgressBarClick}>
+                                <div className="progress-bar">
+                                    <audio ref={audioRef} id="main-audio" src={trackToDisplay.audioSrc}></audio>
+                                </div>
+                                <div className="song-timer">
+                                    <div className="current-time">{formatTime(currentTime)}</div>
+                                    <div className="max-duration">{formatTime(duration)}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="extra-options">
+                            <i id="slideshow" className="material-icons" title="Now Playing">slideshow</i>
+                            <i id="lyrics" className="material-icons" title="Lyrics">lyrics</i>
+                            <i id="queue" className="material-icons" title="Queue">queue_music</i>
+                            <i id="devices" className="material-icons" title="Connect devices">devices</i>
+                            <i id="volume" className="material-icons" title="Turn off">volume_up</i>
+                            <div className="volume-control">
+                                <input
+                                    type="range"
+                                    id="volumeSlider"
+                                    min="0"
+                                    max="1"
+                                    step="0.01"
+                                    value={volume}
+                                    onChange={handleVolumeChange}
+                                />
+                            </div>
+                            <i id="zoom" className="material-icons" title="To full screen">open_in_full</i>
+                        </div>
+                    </footer>
+                </>
+            ) : (
+                <>
+                    <footer className="footer" style={footerStyles}>
+                        <div className="extra-info">
+                            <div className="extra-info-texts">
+                                <p className="extra-title">ПРЕДВАРИТЕЛЬНЫЙ ПРОСМОТР SPOTIFY</p>
+                                <p className="extra-subtitle">Зарегистрируйся, чтобы слушать музыку и подкасты без ограничений. Иногда мы будем показывать рекламу, но ты сможешь пользоваться сервисом бесплатно!</p>
+                            </div>
+                            <Link to="/signup" className="sign-up-btn-footer">Зарегестрироваться</Link>
+                        </div>
+                    </footer>
+                </>
+            )}
+        </div>
     );
 }
 export default Footer
