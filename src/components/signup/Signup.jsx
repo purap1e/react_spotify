@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import './Signup.css';
 import {ReactComponent as Logo} from '../svg/spotify-ar21.svg'
 const SignUp = () => {
@@ -34,10 +34,10 @@ const SignUp = () => {
 
     return (
         <div className="signup-page">
-            <form>
-                <div className="logo">
+            <form className="signup-form">
+                <Link to="/" className="logo">
                     <Logo/>
-                </div>
+                </Link>
                 <p>Зарегистрируйтесь и прогрузитесь в музыку</p>
 
                 <label htmlFor="username">Электронная почта</label>
@@ -53,7 +53,7 @@ const SignUp = () => {
                 <input
                     type="password"
                     name="password"
-                    placeholder="password"
+                    placeholder="Пароль"
                     id="password"
                     value={formData.password}
                     onChange={handleChange}/>

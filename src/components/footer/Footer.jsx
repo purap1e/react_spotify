@@ -47,9 +47,11 @@ const Footer = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const updateTime = () => {
-        setCurrentTime(audioRef.current.currentTime);
-        setDuration(audioRef.current.duration);
-        updateProgress();
+        if (audioRef.current) {
+            setCurrentTime(audioRef.current.currentTime);
+            setDuration(audioRef.current.duration);
+            updateProgress();
+        }
     };
 
     const handleProgressBarClick = (e) => {
@@ -79,29 +81,14 @@ const Footer = () => {
         if (audioRef.current) {
             audioRef.current.addEventListener('timeupdate', updateTime);
             return () => {
-                // eslint-disable-next-line react-hooks/exhaustive-deps
-                audioRef.current.removeEventListener('timeupdate', updateTime);
+                if (audioRef.current) {
+                    audioRef.current.removeEventListener('timeupdate', updateTime);
+                }
             };
         }
     }, [updateTime, trackToDisplay]);
 
     useEffect(() => {
-        // const loadNewTrack = () => {
-        //     setIsPlaying(false);
-        //     setCurrentTime(0);
-        //     setDuration(0);
-        //     document.querySelector('.progress-bar').style.width = '0%';
-        //
-        //     // Load the new audio track
-        //     audioRef.current.src = trackToDisplay.audioSrc;
-        //
-        //     // // Wait for the audio track to load before playing it
-        //     audioRef.current.addEventListener('canplaythrough', () => {
-        //         audioRef.current.play();
-        //         setIsPlaying(true);
-        //     });
-        // };
-
         const loadNewTrack = () => {
             setIsPlaying(false);
             setCurrentTime(0);
@@ -111,14 +98,10 @@ const Footer = () => {
                 progressBar.style.width = '0%';
             }
 
-            // Load the new audio track
             if (audioRef.current) {
-                // Load the new audio track
                 audioRef.current.src = trackToDisplay.audioSrc;
 
-                // Wait for the audio track to load before playing it
                 audioRef.current.addEventListener('canplaythrough', () => {
-                    // Проверка, что компонент не размонтирован перед выполнением действия
                     if (!audioRef.current) return;
 
                     audioRef.current.play();
@@ -129,7 +112,6 @@ const Footer = () => {
 
         loadNewTrack();
 
-        // Clean up event listener to avoid memory leaks
         return () => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
             if (audioRef.current) {

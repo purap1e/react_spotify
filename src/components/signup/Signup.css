@@ -5,7 +5,7 @@
     justify-content: center;
 }
 
-form {
+.signup-form {
     margin-top: 100px;
     width: 308px;
     height: 700px;
@@ -13,20 +13,20 @@ form {
     flex-direction: column;
 }
 
-form p {
+.signup-form p {
     word-wrap: break-word;
     font-size: 42px;
     font-weight: 700;
 }
 
-form label {
+.signup-form label {
     margin-top: 30px;
     margin-bottom: 5px;
     font-size: 12px;
     font-weight: 700;
 }
 
-form input {
+.signup-form input {
     display: block;
     height: 70px;
     width: 100%;
@@ -42,6 +42,7 @@ form input {
 
 .button-signup {
     margin-top: 20px;
+    width: 100%;
     background-color: var(--limegreen);
     border: none;
     height: 80px;

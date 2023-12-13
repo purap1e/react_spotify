@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import './HeaderStyle.css'
 import {RxCaretLeft, RxCaretRight} from "react-icons/rx";
 import {PiArrowCircleDownDuotone} from "react-icons/pi";
@@ -37,7 +37,12 @@ const Header = () => {
                             <div className="download-text">Установить приложение</div>
                         </div>
                         <LuBell className="bell-btn"/>
-                        <img className="avatar" src="/images/kitten.png" alt="kitten"/>
+                        <div className="dropdown">
+                            <img id="avatar" className="avatar" src="/images/kitten.png" alt="kitten"/>
+                                <div className="dropdown-content">
+                                    <Link to="/" onClick={logout} className="logout-link">Выйти</Link>
+                                </div>
+                        </div>
                     </>
                 ) : (
                     <>

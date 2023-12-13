@@ -6,7 +6,7 @@ import './MainPageStyle.css'
 import Footer from "../footer/Footer";
 
 const PlaylistPage = () => {
-    const {playlistId} = useParams()
+    const {playlistId} = useParams();
 
     return (
         <div className="wrapper">
