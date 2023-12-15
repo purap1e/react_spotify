@@ -39,9 +39,9 @@ const Header = () => {
                         <LuBell className="bell-btn"/>
                         <div className="dropdown">
                             <img id="avatar" className="avatar" src="/images/kitten.png" alt="kitten"/>
-                                <div className="dropdown-content">
-                                    <Link to="/" onClick={logout} className="logout-link">Выйти</Link>
-                                </div>
+                            <div className="dropdown-content">
+                                <Link to="/" onClick={logout} className="logout-link">Выйти</Link>
+                            </div>
                         </div>
                     </>
                 ) : (

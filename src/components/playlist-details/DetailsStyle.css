@@ -208,3 +208,13 @@ tbody tr {
 tbody tr:hover {
     background-color: rgba(57, 55, 55, 0.95);
 }
+
+.no-info {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 72px;
+    color: var(--white);
+}

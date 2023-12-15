@@ -12,15 +12,21 @@ const Login = () => {
     const [username, setUsername] = useState();
     const [password, setPassword] = useState();
     const navigate = useNavigate();
+    const [error, setError] = useState('');
 
-    const handleSubmit = e => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const data = {username, password};
-        AuthService.login(data).then(res => {
-            console.log(LocalStorageService.get("access_token"));
-        });
-        login();
-        navigate("/");
+        try {
+            await AuthService.login(data).then(res => {
+                console.log(typeof LocalStorageService.get("access_token"));
+                if (LocalStorageService.get("access_token") != null) {
+                    login();
+                    navigate("/");
+            }})
+        } catch (error) {
+            setError(error.message);
+        }
     }
 
     return (
@@ -63,6 +69,7 @@ const Login = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}/>
 
+                    {error && <div className="error-message">{error}</div>}
 
                     <button className="button-signup" onClick={(e) => handleSubmit(e)}>
                         Войти

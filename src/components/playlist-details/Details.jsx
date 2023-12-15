@@ -9,6 +9,7 @@ import {MdOutlinePlayCircleFilled} from "react-icons/md";
 import {BiDotsHorizontalRounded} from "react-icons/bi";
 import {IoList} from "react-icons/io5";
 import {IoMdTime} from "react-icons/io";
+import {useNavigate} from "react-router-dom";
 
 
 const Details = ({ playlistId }) => {
@@ -17,6 +18,7 @@ const Details = ({ playlistId }) => {
     const [thisPlaylist, setThisPlaylist] = useState({});
     const [tableRows, setTableRows] = useState([]);
     const { setTrack } = useTrackContext();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const filteredSongs = playlistSongsData.filter(song => song.playlistId === playlistId);
@@ -85,64 +87,74 @@ const Details = ({ playlistId }) => {
         <div className="main-details">
             <div className="container">
                 <Header/>
-                <div className="playlist-info">
-                    <div className="playlist-img">
-                        <img src={thisPlaylist.imgSrc} alt={''}/>
-                    </div>
-                    <div className="playlist-text-info">
-                        <p className="title">Плейлист</p>
-                        <p className="playlist-name">{thisPlaylist.name}</p>
-                        <div className="stats">
-                            <img className="stats-ava" src="/images/kitten.png" alt="kitten"/>
-                            <p className="username">puraple</p>
-                            <ul className="inline-list">
-                                <li>{thisPlaylistSongs.length} треков</li>
-                            </ul>
+                {thisPlaylist ? (
+                    <>
+                        <div className="playlist-info">
+                            <div className="playlist-img">
+                                <img src={thisPlaylist.imgSrc} alt={''}/>
+                            </div>
+                            <div className="playlist-text-info">
+                                <p className="title">Плейлист</p>
+                                <p className="playlist-name">{thisPlaylist.name}</p>
+                                <div className="stats">
+                                    <img className="stats-ava" src="/images/kitten.png" alt="kitten"/>
+                                    <p className="username">puraple</p>
+                                    <ul className="inline-list">
+                                        <li>{thisPlaylistSongs.length} треков</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div className="songs">
-                  <div className="functions">
-                      <div className="play-btn-and-settings">
-                          <div className="play-btn">
-                              <MdOutlinePlayCircleFilled/>
-                          </div>
-                          <div className="dots">
-                              <span className="tooltiptext">{`Открыть контекстное меню: ${thisPlaylist.name}`}</span>
-                              <BiDotsHorizontalRounded />
-                          </div>
-                      </div>
-                      <div className="list">
-                          <p>Список</p>
-                          <IoList />
-                      </div>
-                  </div>
-                    <div className="song-table">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Название</th>
-                                    <th>Альбом</th>
-                                    <th>Дата обновления</th>
-                                    <th>
-                                        <div className="sont-duration-icon">
-                                            <IoMdTime/>
-                                        </div>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colSpan="5">
-                                        <hr />
-                                    </td>
-                                </tr>
-                                {tableRows}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                        <div className="songs">
+                            <div className="functions">
+                                <div className="play-btn-and-settings">
+                                    <div className="play-btn">
+                                        <MdOutlinePlayCircleFilled/>
+                                    </div>
+                                    <div className="dots">
+                                        <span className="tooltiptext">{`Открыть контекстное меню: ${thisPlaylist.name}`}</span>
+                                        <BiDotsHorizontalRounded />
+                                    </div>
+                                </div>
+                                <div className="list">
+                                    <p>Список</p>
+                                    <IoList />
+                                </div>
+                            </div>
+                            <div className="song-table">
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Название</th>
+                                        <th>Альбом</th>
+                                        <th>Дата обновления</th>
+                                        <th>
+                                            <div className="sont-duration-icon">
+                                                <IoMdTime/>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td colSpan="5">
+                                            <hr />
+                                        </td>
+                                    </tr>
+                                    {tableRows}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div className="">
+                            <div className="no-info">There is no info</div>
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );
