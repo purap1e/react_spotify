@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import '../sidebar/SideBarStyle.css'
 import '../common/CommonStyle.css'
+import {Link} from "react-router-dom";
 
 const SideBar = () => {
     const [imageSrcArray, setImageSrcArray] = useState([]);
@@ -29,9 +30,10 @@ const SideBar = () => {
         <div className="sidebar">
             <div className="home">
                 <div className="home-icons">
-                    <i className="material-icons">home</i>
+                    <Link to="/">
+                        <i className="material-icons">home</i>
+                    </Link>
                     <i className="material-icons">search</i>
-
                 </div>
             </div>
             <div className="media-library">

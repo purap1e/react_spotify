@@ -9,15 +9,15 @@ import {MdOutlinePlayCircleFilled} from "react-icons/md";
 import {BiDotsHorizontalRounded} from "react-icons/bi";
 import {IoList} from "react-icons/io5";
 import {IoMdTime} from "react-icons/io";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 
-const Details = ({ playlistId }) => {
+const Details = ({playlistId}) => {
 
     const [thisPlaylistSongs, setThisPlaylistSongs] = useState([]);
     const [thisPlaylist, setThisPlaylist] = useState({});
     const [tableRows, setTableRows] = useState([]);
-    const { setTrack } = useTrackContext();
+    const { currentTrack, setTrack } = useTrackContext();
     const navigate = useNavigate();
 
     useEffect(() => {
