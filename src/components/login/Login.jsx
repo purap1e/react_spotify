@@ -19,7 +19,6 @@ const Login = () => {
         const data = {username, password};
         try {
             await AuthService.login(data).then(res => {
-                console.log(typeof LocalStorageService.get("access_token"));
                 if (LocalStorageService.get("access_token") != null) {
                     login();
                     navigate("/");

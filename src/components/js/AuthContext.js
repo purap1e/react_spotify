@@ -11,13 +11,13 @@ export const AuthProvider = ({ children }) => {
   const login = () => {
     setIsAuthenticated(true);
     // Сохранить состояние в localStorage при успешной аутентификации
-    LocalStorageService.set("isAuthenticated", true);
+    LocalStorageService.save("isAuthenticated", true);
   };
   const logout = () => {
     localStorage.clear();
     setIsAuthenticated(false);
     // Удалить сохраненное состояние из localStorage при выходе
-    LocalStorageService.remove("isAuthenticated");
+    LocalStorageService.clear("isAuthenticated");
   };
 
   useEffect(() => {

@@ -6,6 +6,7 @@ import PlaylistPage from "./components/pages/PlaylistPage";
 import {TrackProvider} from './components/TrackContext';
 import Signup from "./components/signup/Signup";
 import Login from "./components/login/Login";
+import SearchPage from "./components/pages/SearchPage";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
                   <Route path="/playlist/:playlistId" element={<PlaylistPage/>} />
                   <Route path="/signup" element={<Signup/>} />
                   <Route path="/login" element={<Login/>} />
+                  <Route path="/search" element={<SearchPage/>} />
               </Routes>
           </BrowserRouter>
       </TrackProvider>
