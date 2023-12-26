@@ -1,5 +1,5 @@
 import Header from "../header/Header";
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import './DetailsStyle.css'
 import {useTrackContext} from '../TrackContext';
 
@@ -7,7 +7,11 @@ import {MdOutlinePlayCircleFilled} from "react-icons/md";
 import {BiDotsHorizontalRounded} from "react-icons/bi";
 import {IoList} from "react-icons/io5";
 import {IoMdTime} from "react-icons/io";
+import { CiHeart } from "react-icons/ci";
+import { FaHeart } from "react-icons/fa";
 import axios from "axios";
+import {USER_INFO_KEY} from "../service/LocalStorageService";
+import LocalStorageService from "../service/LocalStorageService";
 
 
 const Details = ({playlistId}) => {
@@ -15,10 +19,11 @@ const Details = ({playlistId}) => {
     const [thisPlaylistSongs, setThisPlaylistSongs] = useState([]);
     const [thisPlaylist, setThisPlaylist] = useState({});
     const [tableRows, setTableRows] = useState([]);
-    const {currentTrack, setTrack} = useTrackContext();
+    const {setTrack} = useTrackContext();
+    const [user] = useState(JSON.parse(LocalStorageService.get(USER_INFO_KEY)));
+
 
     useEffect(() => {
-        console.log("Fetching data...");
         axios.get(`http://localhost:8080/api/v1/playlists/${playlistId}`)
             .then(response => {
                 setThisPlaylist(response.data);
@@ -27,7 +32,7 @@ const Details = ({playlistId}) => {
                 console.error('Error fetching playlists:', error);
             });
 
-        axios.get(`http://localhost:8080/api/v1/playlists/${playlistId}/songs`)
+        axios.get(`http://localhost:8080/api/v1/playlists/${playlistId}/songs?userId=${user.id}`)
             .then(response => {
                 setThisPlaylistSongs(response.data);
             })
@@ -63,12 +68,32 @@ const Details = ({playlistId}) => {
     };
 
 
+    const addSongToUser = (songId) => {
+        axios.post(`http://localhost:8080/api/v1/users/add-song?userId=${user.id}&songId=${songId}`)
+            .then(r => console.log(r));
+
+        const updatedPlaylistSongs = thisPlaylistSongs.map(song =>
+            songId === song.id ? {...song, test: 1} : song)
+
+        setThisPlaylistSongs(updatedPlaylistSongs);
+    }
+
+    const removeSongFromUser = (songId) => {
+        axios.delete(`http://localhost:8080/api/v1/users?userId=${user.id}&songId=${songId}`)
+            .then(r => console.log(r))
+
+        const updatedPlaylistSongs = thisPlaylistSongs.map(song =>
+            songId === song.id ? {...song, test: 0} : song)
+
+        setThisPlaylistSongs(updatedPlaylistSongs);
+    }
 
     useEffect(() => {
         const updateTableRows = async () => {
 
             const rows = await Promise.all(
-                thisPlaylistSongs.map(async (song, index) => {
+                thisPlaylistSongs.map((song, index) => {
+                    console.log(song.id);
                     try {
                         const updatedTimeDate = new Date(song.updatedTime);
                         const formattedUpdatedTime = updatedTimeDate.toLocaleDateString('en-US', {
@@ -91,6 +116,21 @@ const Details = ({playlistId}) => {
                                 <td className="song-text">{song.album}</td>
                                 <td className="song-text">{formattedUpdatedTime}</td>
                                 <td className="song-text">
+                                    {song.test === 0 ? (
+                                        <>
+                                            <div className="btn-like" onClick={(e) => { e.stopPropagation(); addSongToUser(song.id); }}>
+                                                <CiHeart/>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="btn-dislike" onClick={(e) => { e.stopPropagation(); removeSongFromUser(song.id); }}>
+                                                <FaHeart/>
+                                            </div>
+                                        </>
+                                    )}
+                                </td>
+                                <td className="song-text">
                                     <AudioDuration audioSrc={song.audio} />
                                 </td>
                             </tr>
@@ -105,13 +145,6 @@ const Details = ({playlistId}) => {
         };
         updateTableRows().then();
     }, [thisPlaylistSongs]);
-
-    const formatDuration = (duration) => {
-        const minutes = Math.floor(duration / 60);
-        const seconds = Math.floor(duration % 60);
-        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    };
-
 
     return (
         <div className="main-details">
@@ -160,6 +193,7 @@ const Details = ({playlistId}) => {
                                         <th>Название</th>
                                         <th>Альбом</th>
                                         <th>Дата обновления</th>
+                                        <th> </th>
                                         <th>
                                             <div className="sont-duration-icon">
                                                 <IoMdTime/>
@@ -169,7 +203,7 @@ const Details = ({playlistId}) => {
                                     </thead>
                                     <tbody>
                                     <tr>
-                                        <td colSpan="5">
+                                        <td colSpan="6">
                                             <hr/>
                                         </td>
                                     </tr>

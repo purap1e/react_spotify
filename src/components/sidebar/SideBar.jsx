@@ -33,7 +33,9 @@ const SideBar = () => {
                     <Link to="/">
                         <i className="material-icons">home</i>
                     </Link>
-                    <i className="material-icons">search</i>
+                    <Link to="/search">
+                        <i className="material-icons">search</i>
+                    </Link>
                 </div>
             </div>
             <div className="media-library">

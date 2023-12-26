@@ -1,12 +1,12 @@
 import React from 'react'
 import SideBar from "../sidebar/SideBar";
-import Header from "../header/Header";
+import Search from "../search/Search";
 
 const SearchPage = () => {
     return (
         <div className="wrapper">
             <SideBar/>
-            <Header showSearchInput={true}/>
+            <Search/>
         </div>
     );
 }

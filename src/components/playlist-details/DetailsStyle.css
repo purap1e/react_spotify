@@ -218,3 +218,27 @@ tbody tr:hover {
     font-size: 72px;
     color: var(--white);
 }
+
+.btn-like {
+    font-size: 20px;
+    color: var(--white);
+    opacity: .8;
+    text-decoration: none;
+    transition: scale ease .1s;
+}
+
+.btn-like:hover {
+    scale: 1.1;
+    opacity: 1;
+}
+
+.btn-dislike {
+    font-size: 20px;
+    color: var(--limegreen);
+    text-decoration: none;
+    transition: scale ease .1s;
+}
+
+.btn-dislike:hover {
+    scale: 1.1;
+}
