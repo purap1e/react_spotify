@@ -1,15 +1,13 @@
-import playlistSongsData from '../data/Songs'
 import Header from "../header/Header";
-import React, {useEffect, useState} from "react";
-import playlists from "../data/Playlists";
+import React, {useCallback, useEffect, useState} from "react";
 import './DetailsStyle.css'
-import { useTrackContext } from '../TrackContext';
+import {useTrackContext} from '../TrackContext';
 
 import {MdOutlinePlayCircleFilled} from "react-icons/md";
 import {BiDotsHorizontalRounded} from "react-icons/bi";
 import {IoList} from "react-icons/io5";
 import {IoMdTime} from "react-icons/io";
-import {useLocation, useNavigate} from "react-router-dom";
+import axios from "axios";
 
 
 const Details = ({playlistId}) => {
@@ -17,42 +15,73 @@ const Details = ({playlistId}) => {
     const [thisPlaylistSongs, setThisPlaylistSongs] = useState([]);
     const [thisPlaylist, setThisPlaylist] = useState({});
     const [tableRows, setTableRows] = useState([]);
-    const { currentTrack, setTrack } = useTrackContext();
-    const navigate = useNavigate();
+    const {currentTrack, setTrack} = useTrackContext();
 
     useEffect(() => {
-        const filteredSongs = playlistSongsData.filter(song => song.playlistId === playlistId);
-        setThisPlaylistSongs(filteredSongs);
-
-        console.log(thisPlaylistSongs);
-
-        const playlist = playlists.find(p => p.id === playlistId);
-        setThisPlaylist(playlist);
-
-    }, [playlistId]);
-
-    useEffect(() => {
-        const loadAudioDuration = async (audioSrc) => {
-            const audio = new Audio(audioSrc);
-            return new Promise((resolve, reject) => {
-                audio.addEventListener('loadedmetadata', () => {
-                    resolve(audio.duration);
-                });
-                audio.addEventListener('error', reject);
-                audio.load();
+        console.log("Fetching data...");
+        axios.get(`http://localhost:8080/api/v1/playlists/${playlistId}`)
+            .then(response => {
+                setThisPlaylist(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching playlists:', error);
             });
+
+        axios.get(`http://localhost:8080/api/v1/playlists/${playlistId}/songs`)
+            .then(response => {
+                setThisPlaylistSongs(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching playlists:', error);
+            });
+    }, []);
+
+    const AudioDuration = ({ audioSrc }) => {
+        const [duration, setDuration] = useState(null);
+
+        useEffect(() => {
+            const audio = new Audio(audioSrc);
+
+            const handleLoadedMetadata = () => {
+                setDuration(audio.duration);
+            };
+
+            audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+
+            return () => {
+                audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+            };
+        }, [audioSrc]);
+
+        const formatDuration = (seconds) => {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+            return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
         };
+
+        return <span>{duration ? formatDuration(duration) : 'Loading...'}</span>;
+    };
+
+
+
+    useEffect(() => {
         const updateTableRows = async () => {
+
             const rows = await Promise.all(
                 thisPlaylistSongs.map(async (song, index) => {
                     try {
-                        const duration = await loadAudioDuration(song.audioSrc);
+                        const updatedTimeDate = new Date(song.updatedTime);
+                        const formattedUpdatedTime = updatedTimeDate.toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric'
+                        });
                         return (
                             <tr key={index} onClick={() => setTrack(song)}>
-                                <td className="song-text">{song.id}</td>
+                                <td className="song-text">{index + 1}</td>
                                 <td>
                                     <div className="img-name">
-                                        <img src={song.imgSrc} alt={''} />
+                                        <img src={song.image} alt={''}/>
                                         <div>
                                             <p>{song.name}</p>
                                             <p className="song-text">{song.artist}</p>
@@ -60,8 +89,10 @@ const Details = ({playlistId}) => {
                                     </div>
                                 </td>
                                 <td className="song-text">{song.album}</td>
-                                <td className="song-text">{song.updatedTime}</td>
-                                <td className="song-text">{formatDuration(duration)}</td>
+                                <td className="song-text">{formattedUpdatedTime}</td>
+                                <td className="song-text">
+                                    <AudioDuration audioSrc={song.audio} />
+                                </td>
                             </tr>
                         );
                     } catch (error) {
@@ -72,7 +103,7 @@ const Details = ({playlistId}) => {
             );
             setTableRows(rows.filter(row => row !== null));
         };
-        updateTableRows();
+        updateTableRows().then();
     }, [thisPlaylistSongs]);
 
     const formatDuration = (duration) => {
@@ -80,7 +111,6 @@ const Details = ({playlistId}) => {
         const seconds = Math.floor(duration % 60);
         return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     };
-
 
 
     return (
@@ -91,7 +121,7 @@ const Details = ({playlistId}) => {
                     <>
                         <div className="playlist-info">
                             <div className="playlist-img">
-                                <img src={thisPlaylist.imgSrc} alt={''}/>
+                                <img src={thisPlaylist.image} alt={''}/>
                             </div>
                             <div className="playlist-text-info">
                                 <p className="title">Плейлист</p>
@@ -112,13 +142,14 @@ const Details = ({playlistId}) => {
                                         <MdOutlinePlayCircleFilled/>
                                     </div>
                                     <div className="dots">
-                                        <span className="tooltiptext">{`Открыть контекстное меню: ${thisPlaylist.name}`}</span>
-                                        <BiDotsHorizontalRounded />
+                                        <span
+                                            className="tooltiptext">{`Открыть контекстное меню: ${thisPlaylist.name}`}</span>
+                                        <BiDotsHorizontalRounded/>
                                     </div>
                                 </div>
                                 <div className="list">
                                     <p>Список</p>
-                                    <IoList />
+                                    <IoList/>
                                 </div>
                             </div>
                             <div className="song-table">
@@ -139,7 +170,7 @@ const Details = ({playlistId}) => {
                                     <tbody>
                                     <tr>
                                         <td colSpan="5">
-                                            <hr />
+                                            <hr/>
                                         </td>
                                     </tr>
                                     {tableRows}

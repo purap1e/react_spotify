@@ -1,11 +1,22 @@
-import React, { useState } from 'react'
-import playlists from '../data/Playlists'
+import React, {useEffect, useState} from 'react'
 import recommendations from '../data/Recommendations'
 import '../common/CommonStyle.css'
 import '../main-content/ContentStyle.css'
 import {Link} from "react-router-dom";
+import axios from "axios";
 
 const Content = () => {
+    const [playlists, setPlaylists] = useState([]);
+
+    useEffect(() => {
+        axios.get('http://localhost:8080/api/v1/playlists')
+            .then(response => {
+                setPlaylists(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching playlists:', error);
+            });
+    }, []);
 
     return (
        <div>
@@ -13,7 +24,7 @@ const Content = () => {
                {playlists.map((playlist) => (
                    <Link to={`/playlist/${playlist.id}`} className="link">
                    <div className="playlist" key={playlist.id}>
-                       <img src={playlist.imgSrc} alt={playlist.name} />
+                       <img src={playlist.image} alt={playlist.name} />
                        <div className="text-area">
                            <p>{playlist.name}</p>
                            <div className="play-pause-item">

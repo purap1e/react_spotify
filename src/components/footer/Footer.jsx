@@ -17,10 +17,10 @@ const Footer = () => {
     const [volume, setVolume] = useState(1);
 
     const defaultTrack = {
-        imgSrc: "/images/die_for_you.jpg",
-        name: "Die For You",
-        artist: "The Weeknd",
-        audioSrc: "/musics/dieforyou.mp3"
+        image: "/images/default-cover-art.png",
+        name: "",
+        artist: "",
+        audio: ""
     };
 
     const trackToDisplay = currentTrack || defaultTrack;
@@ -99,7 +99,7 @@ const Footer = () => {
             }
 
             if (audioRef.current) {
-                audioRef.current.src = trackToDisplay.audioSrc;
+                audioRef.current.src = trackToDisplay.audio;
 
                 audioRef.current.addEventListener('canplaythrough', () => {
                     if (!audioRef.current) return;
@@ -143,7 +143,7 @@ const Footer = () => {
                 <>
                     <footer className="footer" style={footerStyles}>
                         <div className="img-area">
-                            <img src={trackToDisplay.imgSrc} alt=""/>
+                            <img src={trackToDisplay.image} alt=""/>
                             <div className="song-details">
                                 <p className="name">{trackToDisplay.name}</p>
                                 <p className="artist">{trackToDisplay.artist}</p>
@@ -163,7 +163,7 @@ const Footer = () => {
                             </div>
                             <div className="progress-area" onClick={handleProgressBarClick}>
                                 <div className="progress-bar">
-                                    <audio ref={audioRef} id="main-audio" src={trackToDisplay.audioSrc}></audio>
+                                    <audio ref={audioRef} id="main-audio" src={trackToDisplay.audio}></audio>
                                 </div>
                                 <div className="song-timer">
                                     <div className="current-time">{formatTime(currentTime)}</div>

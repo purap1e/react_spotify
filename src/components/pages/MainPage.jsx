@@ -9,7 +9,6 @@ const MainPage = () => {
         <div className="wrapper">
             <SideBar/>
             <Home/>
-            <Footer/>
         </div>
     );
 }
